@@ -1,0 +1,11 @@
+# Cached ENCODE peak downloads — regenerated on demand, not source
+app/.cache/
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/

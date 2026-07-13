@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>regulatr — cell-type-aware variant prioritization</title>
+  <link rel="stylesheet" href="/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/igv@2.15.13/dist/igv.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">◈</span>
+      <div>
+        <h1>regulatr</h1>
+        <p class="tag">non-coding variants that are functional <em>in this cell type</em></p>
+      </div>
+    </div>
+    <a class="src" href="https://www.encodeproject.org" target="_blank" rel="noopener">ENCODE · ClinVar · Ensembl · Open Targets</a>
+  </header>
+
+  <main>
+    <form id="form" class="controls">
+      <label class="field grow">
+        <span>ENCODE accession <small>(ATAC-seq experiment ENCSR… or peak file ENCFF…)</small></span>
+        <input id="accession" name="accession" placeholder="e.g. ENCSR042AWH  (HepG2 / liver ATAC-seq)" autocomplete="off" required />
+      </label>
+      <button id="loadregions" type="button">Load regions</button>
+      <label class="field">
+        <span>Region <small>(top accessible loci in this cell type)</small></span>
+        <select id="region-select" disabled></select>
+      </label>
+      <label class="field hidden" id="custom-region-field">
+        <span>Custom region</span>
+        <input id="region-custom" placeholder="chr1:109200000-109350000" autocomplete="off" />
+      </label>
+      <button id="run" type="submit" disabled>Analyze</button>
+    </form>
+
+    <p class="hint" id="hint">
+      Enter an accession and hit <b>Load regions</b> — the dropdown fills with the loci where
+      <em>this</em> experiment has the strongest open chromatin (labelled by nearest gene). Try
+      <button type="button" class="chip" data-acc="ENCSR637OPZ">CD8 T cell</button>
+      <button type="button" class="chip" data-acc="ENCSR000EMT">GM12878 (B-cell)</button>
+      and compare which regions surface. Disease is inferred automatically — each target gene's
+      strongest Open Targets association.
+    </p>
+    <p class="hint" id="region-status"></p>
+
+    <div id="enrich-panel" class="card enrich hidden">
+      <div class="card-head">
+        <h2>Pathway enrichment
+          <span class="note">g:Profiler · ordered over the nearest genes of the strongest peaks (signal-ranked)</span>
+        </h2>
+        <button id="enrichbtn" class="ghost" type="button">Run enrichment</button>
+      </div>
+      <p class="hint" id="enrich-status">Which pathways do this cell type's most-accessible genes converge on? Run it to find out.</p>
+      <ol id="enrich-list" class="enrich-list"></ol>
+    </div>
+
+    <section id="results" class="results hidden" aria-live="polite">
+      <!-- spinner overlay -->
+      <div id="overlay" class="overlay hidden"><div class="spinner"></div><span>running pipeline…</span></div>
+
+      <div id="errbox" class="errbox hidden"></div>
+
+      <div class="grid">
+        <div class="card provenance">
+          <h2>Cell-type provenance <span class="why">why this accession</span></h2>
+          <div id="prov"></div>
+        </div>
+        <div class="card stats">
+          <h2>Summary</h2>
+          <div id="stats" class="chips"></div>
+        </div>
+      </div>
+
+      <div class="card narration">
+        <h2>Mechanistic summary
+          <span class="note">auto-generated from the joined result — in the agent, Claude writes this</span>
+        </h2>
+        <p id="narration"></p>
+      </div>
+
+      <div class="card figure">
+        <div class="card-head">
+          <h2>Accessibility track</h2>
+          <div class="legend">
+            <span><i class="sw peak"></i> open peak</span>
+            <span><i class="sw vin"></i> variant in open chromatin</span>
+            <span><i class="sw vout"></i> variant outside peaks</span>
+          </div>
+        </div>
+        <div id="track" class="track"></div>
+      </div>
+
+      <div class="card table">
+        <div class="card-head">
+          <h2>Ranked variants</h2>
+          <div class="dl">
+            <button id="dljson" class="ghost" disabled>Download JSON</button>
+            <button id="dlcsv" class="ghost" disabled>Download CSV</button>
+          </div>
+        </div>
+        <div class="table-controls">
+          <label class="rows">Rows per page
+            <select id="pagesize">
+              <option value="25" selected>25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="all">All</option>
+            </select>
+          </label>
+          <span id="table-count" class="count"></span>
+          <span class="pager">
+            <button id="firstpage" class="ghost" title="First page">«</button>
+            <button id="prevpage" class="ghost">‹ Prev</button>
+            <span id="pageinfo"></span>
+            <button id="nextpage" class="ghost">Next ›</button>
+            <button id="lastpage" class="ghost" title="Last page">»</button>
+          </span>
+        </div>
+        <div class="table-wrap">
+          <table id="vtable">
+            <thead id="vhead"></thead>
+            <tbody id="vbody"></tbody>
+          </table>
+        </div>
+        <p class="hint sorthint">Click any column header to sort · click again to reverse.</p>
+        <p id="warnings" class="warnings"></p>
+      </div>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
