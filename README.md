@@ -10,7 +10,7 @@ mechanistic hypotheses.
 Python standard library only (no third-party packages). All data is fetched live from
 public genomics resources at query time.
 
-![Demonstration of the project's videos](https://github.com/btarun13/Regulatr-app/blob/main/regulatr_teaser.mp4)
+![Part 1 ](https://github.com/btarun13/Regulatr-app/blob/main/regulatr_teaser_part2.gif)
 
 ---
 
@@ -20,6 +20,9 @@ Most disease-associated genetic variation is **non-coding**, where its effect �
 *regulatory*: it changes whether and where a gene is switched on. But regulatory DNA is
 **cell-type-specific**: an enhancer variant only matters in a cell type where that enhancer
 is active. So the useful question isn't "is this variant functional?" but:
+
+![Part 3 ](https://github.com/btarun13/Regulatr-app/blob/main/regulatr_teaser_part3.gif)
+
 
 > **"Is this variant in open, active regulatory DNA *in the relevant cell type*, and which
 > gene does it plausibly regulate?"**
@@ -52,6 +55,9 @@ GRCh38**, and build mismatches are rejected rather than silently lifted.
   score, equally weighted; in-peak variants sort to the top.
 - **Pathway enrichment** — an ordered g:Profiler query (GO:BP / Reactome / KEGG) over the
   cell type's most-accessible genes.
+
+ ![Part 4 ](https://github.com/btarun13/Regulatr-app/blob/main/regulatr_teaser_part4.gif)
+
 - **Genome-browser view** — embedded igv.js (hg38) with a self-contained SVG fallback.
 - **Export** — full result set as JSON or CSV.
 
