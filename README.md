@@ -1,4 +1,4 @@
-# regulatr
+# Regulatr
 
 **Cell-type-aware non-coding variant prioritization.**
 
@@ -9,6 +9,8 @@ mechanistic hypotheses.
 
 Python standard library only (no third-party packages). All data is fetched live from
 public genomics resources at query time.
+
+![Demonstration of the project's videos](https://github.com/btarun13/Regulatr-app/blob/main/regulatr_teaser.mp4)
 
 ---
 
